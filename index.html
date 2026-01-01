@@ -671,6 +671,11 @@
                           }`}>
                             Réponse attendue : {currentQuestion.answer}
                           </p>
+                          {!isAnswerCorrect && (
+                            <p className="mt-2 text-red-700 font-semibold">
+                              Votre tour est passé...
+                            </p>
+                          )}
                         </div>
                       )}
                       
@@ -687,12 +692,32 @@
                     <p className="text-lg mb-6">C'est votre tour de jouer !</p>
                   )}
                   
-                  <button
-                    onClick={handleStartTurn}
-                    className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xl font-semibold shadow-lg"
-                  >
-                    Commencer mon tour
-                  </button>
+                  {isAnswerCorrect === true && (
+                    <button
+                      onClick={handleStartTurn}
+                      className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xl font-semibold shadow-lg"
+                    >
+                      Commencer mon tour
+                    </button>
+                  )}
+                  
+                  {isAnswerCorrect === false && (
+                    <button
+                      onClick={handleEndTurn}
+                      className="px-8 py-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-xl font-semibold shadow-lg"
+                    >
+                      Passer le tour
+                    </button>
+                  )}
+                  
+                  {isAnswerCorrect === null && (
+                    <button
+                      onClick={handleStartTurn}
+                      className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xl font-semibold shadow-lg"
+                    >
+                      Commencer mon tour
+                    </button>
+                  )}
                 </div>
               )}
 
