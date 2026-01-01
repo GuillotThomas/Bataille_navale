@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Bataille Navale">
+  <meta name="theme-color" content="#1e3a8a">
+  <title>Bataille Navale PWA</title>
+  
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%231e3a8a'/%3E%3Cpath fill='%23ffffff' d='M20 21c-1.39 0-2.78-.47-4-1.32-2.44 1.71-5.56 1.71-8 0C6.78 20.53 5.39 21 4 21H2v2h2c1.38 0 2.74-.35 4-.99 2.52 1.29 5.48 1.29 8 0 1.26.65 2.62.99 4 .99h2v-2h-2zM3.95 19H4c1.6 0 3.02-.88 4-2 .98 1.12 2.4 2 4 2s3.02-.88 4-2c.98 1.12 2.4 2 4 2h.05l1.89-6.68c.08-.26.06-.54-.06-.78s-.34-.42-.6-.5L20 10.62V6c0-1.1-.9-2-2-2h-3V1H9v3H6c-1.1 0-2 .9-2 2v4.62l-1.29-1.42c-.26-.08-.48-.26-.6-.5s-.15-.52-.06-.78L3.95 19zM6 6h12v3.97L12 8 6 9.97V6z'/%3E%3C/svg%3E">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      overscroll-behavior: none;
+    }
+    
+    input {
+      font-size: 16px !important;
+    }
+    
+    @media (display-mode: standalone) {
+      body {
+        padding-top: env(safe-area-inset-top);
+      }
+    }
+    
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const GRID_SIZE = 10;
+    const SHIPS = [
+      { name: 'Croiseur', size: 4, color: 'bg-green-600' },
+      { name: 'Contre-torpilleur', size: 3, color: 'bg-purple-600' },
+      { name: 'Sous-marin', size: 3, color: 'bg-orange-600' },
+      { name: 'Torpilleur', size: 2, color: 'bg-pink-600' }
+    ];
+
+    const ShipIcon = () => (
+      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M20 21c-1.39 0-2.78-.47-4-1.32-2.44 1.71-5.56 1.71-8 0C6.78 20.53 5.39 21 4 21H2v2h2c1.38 0 2.74-.35 4-.99 2.52 1.29 5.48 1.29 8 0 1.26.65 2.62.99 4 .99h2v-2h-2zM3.95 19H4c1.6 0 3.02-.88 4-2 .98 1.12 2.4 2 4 2s3.02-.88 4-2c.98 1.12 2.4 2 4 2h.05l1.89-6.68c.08-.26.06-.54-.06-.78s-.34-.42-.6-.5L20 10.62V6c0-1.1-.9-2-2-2h-3V1H9v3H6c-1.1 0-2 .9-2 2v4.62l-1.29-1.42c-.26-.08-.48-.26-.6-.5s-.15-.52-.06-.78L3.95 19zM6 6h12v3.97L12 8 6 9.97V6z"/>
+      </svg>
+    );
+
+    const SaveIcon = () => (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z"/>
+      </svg>
+    );
+
+    const RotateIcon = () => (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"/>
+      </svg>
+    );
+
+    const TrophyIcon = () => (
+      <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M3 3h14a1 1 0 011 1v1a1 1 0 01-.293.707L13 10.414V15a1 1 0 01-.293.707l-2 2A1 1 0 019 17v-6.586L4.293 5.707A1 1 0 014 5V4a1 1 0 011-1z"/>
+      </svg>
+    );
+
+    function BatailleNavale() {
+      const [currentPlayer, setCurrentPlayer] = useState(1);
+      const [gameName, setGameName] = useState('');
+      const [savedGames, setSavedGames] = useState([]);
+      const [gameState, setGameState] = useState('menu');
+      const [playerGrid, setPlayerGrid] = useState([]);
+      const [opponentGrid, setOpponentGrid] = useState([]);
+      const [playerShots, setPlayerShots] = useState([]);
+      const [opponentShots, setOpponentShots] = useState([]);
+      const [currentShipIndex, setCurrentShipIndex] = useState(0);
+      const [isHorizontal, setIsHorizontal] = useState(true);
+      const [message, setMessage] = useState('');
+      const [winner, setWinner] = useState('');
+      const [lastShotResult, setLastShotResult] = useState('');
+      const [showHelp, setShowHelp] = useState(false);
+      const [selectedThemes, setSelectedThemes] = useState([]);
+      const [questions, setQuestions] = useState([]);
+      const [currentQuestion, setCurrentQuestion] = useState(null);
+      const [showAnswer, setShowAnswer] = useState(false);
+
+      useEffect(() => {
+        loadSavedGames();
+        loadQuestions();
+      }, []);
+
+      const loadSavedGames = () => {
+        const games = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith('battleship_')) {
+            games.push(key.replace('battleship_', ''));
+          }
+        }
+        setSavedGames(games);
+      };
+
+      const loadQuestions = async () => {
+        try {
+          const response = await fetch('questions.json');
+          const data = await response.json();
+          setQuestions(data);
+        } catch (error) {
+          console.error('Erreur lors du chargement des questions:', error);
+          setQuestions([]);
+        }
+      };
+
+      const pickRandomQuestion = () => {
+        if (questions.length === 0) {
+          setCurrentQuestion(null);
+          return;
+        }
+
+        let availableQuestions = questions;
+        
+        // Filtrer par thèmes sélectionnés si des thèmes sont cochés
+        if (selectedThemes.length > 0) {
+          availableQuestions = questions.filter(q => selectedThemes.includes(q.theme));
+        }
+
+        // Si aucune question disponible avec les thèmes sélectionnés
+        if (availableQuestions.length === 0) {
+          availableQuestions = questions;
+        }
+
+        // Choisir une question aléatoire
+        const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+        setCurrentQuestion(availableQuestions[randomIndex]);
+        setShowAnswer(false);
+      };
+
+      const createNewGame = (name) => {
+        if (!name.trim()) return;
+        setGameName(name.trim());
+        setGameState('setup');
+        setCurrentPlayer(1);
+        initializeGame();
+      };
+
+      const loadGame = (name) => {
+        try {
+          const data = localStorage.getItem(`battleship_${name}`);
+          if (data) {
+            const gameData = JSON.parse(data);
+            setGameName(name);
+            setPlayerGrid(gameData.playerGrid);
+            setOpponentGrid(gameData.opponentGrid);
+            setPlayerShots(gameData.playerShots);
+            setOpponentShots(gameData.opponentShots);
+            setCurrentPlayer(gameData.currentPlayer);
+            setGameState(gameData.gameState);
+            setMessage(gameData.message);
+            setCurrentShipIndex(gameData.currentShipIndex || 0);
+            setLastShotResult(gameData.lastShotResult || '');
+          }
+        } catch (e) {
+          setMessage('Erreur lors du chargement');
+        }
+      };
+
+      const saveGameAuto = (pShots, oShots, nextPlayer, state, msg, shotResult = '') => {
+        if (!gameName) return;
+        const gameData = {
+          playerGrid,
+          opponentGrid,
+          playerShots: pShots,
+          opponentShots: oShots,
+          currentPlayer: nextPlayer,
+          gameState: state,
+          message: msg,
+          currentShipIndex,
+          lastShotResult: shotResult,
+          lastSaved: new Date().toISOString()
+        };
+        try {
+          localStorage.setItem(`battleship_${gameName}`, JSON.stringify(gameData));
+        } catch (e) {
+          console.error('Erreur sauvegarde:', e);
+        }
+      };
+
+      const deleteGame = (name) => {
+        localStorage.removeItem(`battleship_${name}`);
+        loadSavedGames();
+      };
+
+      const initializeGame = () => {
+        const grid = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null));
+        setPlayerGrid(JSON.parse(JSON.stringify(grid)));
+        setOpponentGrid(JSON.parse(JSON.stringify(grid)));
+        setPlayerShots([]);
+        setOpponentShots([]);
+        setCurrentShipIndex(0);
+        setMessage('Placez vos navires');
+        setWinner('');
+        setLastShotResult('');
+      };
+
+      const canPlaceShip = (grid, row, col, size, horizontal) => {
+        if (horizontal) {
+          if (col + size > GRID_SIZE) return false;
+          for (let i = 0; i < size; i++) {
+            if (grid[row][col + i]) return false;
+          }
+        } else {
+          if (row + size > GRID_SIZE) return false;
+          for (let i = 0; i < size; i++) {
+            if (grid[row + i][col]) return false;
+          }
+        }
+        return true;
+      };
+
+      const placeShip = (grid, row, col, size, horizontal, ship) => {
+        const newGrid = JSON.parse(JSON.stringify(grid));
+        if (horizontal) {
+          for (let i = 0; i < size; i++) {
+            newGrid[row][col + i] = { name: ship.name, color: ship.color };
+          }
+        } else {
+          for (let i = 0; i < size; i++) {
+            newGrid[row + i][col] = { name: ship.name, color: ship.color };
+          }
+        }
+        return newGrid;
+      };
+
+      const handlePlayerGridClick = (row, col) => {
+        if (gameState === 'setup' || gameState === 'setup2') {
+          const ship = SHIPS[currentShipIndex];
+          const grid = gameState === 'setup' ? playerGrid : opponentGrid;
+          
+          if (canPlaceShip(grid, row, col, ship.size, isHorizontal)) {
+            const newGrid = placeShip(grid, row, col, ship.size, isHorizontal, ship);
+            
+            if (gameState === 'setup') {
+              setPlayerGrid(newGrid);
+            } else {
+              setOpponentGrid(newGrid);
+            }
+            
+            if (currentShipIndex === SHIPS.length - 1) {
+              if (gameState === 'setup') {
+                setGameState('transition');
+                setCurrentShipIndex(0);
+                setMessage('Joueur 1 prêt ! Passez le dispositif au Joueur 2');
+              } else {
+                setGameState('turn-start');
+                setCurrentPlayer(1);
+                setMessage('Joueur 1, préparez-vous !');
+                pickRandomQuestion();
+              }
+            } else {
+              setCurrentShipIndex(currentShipIndex + 1);
+              setMessage(`Placez votre ${SHIPS[currentShipIndex + 1].name}`);
+            }
+          }
+        }
+      };
+
+      const handleOpponentGridClick = (row, col) => {
+        if (gameState === 'playing') {
+          const currentShots = currentPlayer === 1 ? playerShots : opponentShots;
+          const targetGrid = currentPlayer === 1 ? opponentGrid : playerGrid;
+          
+          if (currentShots.some(s => s.row === row && s.col === col)) {
+            setMessage('Déjà tiré ici !');
+            return;
+          }
+
+          const hit = targetGrid[row][col] !== null;
+          const newShots = [...currentShots, { row, col, hit }];
+          
+          let shotResult = '';
+          if (currentPlayer === 1) {
+            setPlayerShots(newShots);
+            if (hit) {
+              shotResult = `Joueur 1 a touché !`;
+              setMessage(shotResult);
+              if (checkWin(opponentGrid, newShots)) {
+                endGame(1);
+                return;
+              }
+            } else {
+              shotResult = `Joueur 1 a raté !`;
+              setMessage(shotResult);
+            }
+          } else {
+            setOpponentShots(newShots);
+            if (hit) {
+              shotResult = `Joueur 2 a touché !`;
+              setMessage(shotResult);
+              if (checkWin(playerGrid, newShots)) {
+                endGame(2);
+                return;
+              }
+            } else {
+              shotResult = `Joueur 2 a raté !`;
+              setMessage(shotResult);
+            }
+          }
+
+          const nextPlayer = currentPlayer === 1 ? 2 : 1;
+          setLastShotResult(shotResult);
+          saveGameAuto(
+            currentPlayer === 1 ? newShots : playerShots, 
+            currentPlayer === 2 ? newShots : opponentShots, 
+            nextPlayer,
+            'shot-result',
+            shotResult,
+            shotResult
+          );
+          setGameState('shot-result');
+        }
+      };
+
+      const checkWin = (grid, shots) => {
+        const shipCells = [];
+        for (let i = 0; i < GRID_SIZE; i++) {
+          for (let j = 0; j < GRID_SIZE; j++) {
+            if (grid[i][j]) shipCells.push(`${i},${j}`);
+          }
+        }
+        
+        const hitCells = shots.filter(s => s.hit).map(s => `${s.row},${s.col}`);
+        return shipCells.every(cell => hitCells.includes(cell));
+      };
+
+      const endGame = (winningPlayer) => {
+        setGameState('gameover');
+        setWinner(`Joueur ${winningPlayer}`);
+        setMessage(`Victoire du Joueur ${winningPlayer} !`);
+      };
+
+      const handleEndTurn = () => {
+        const nextPlayer = currentPlayer === 1 ? 2 : 1;
+        setCurrentPlayer(nextPlayer);
+        setGameState('turn-start');
+        setMessage(`Joueur ${nextPlayer}, préparez-vous !`);
+        pickRandomQuestion();
+        saveGameAuto(
+          playerShots, 
+          opponentShots, 
+          nextPlayer,
+          'turn-start',
+          `Joueur ${nextPlayer}, préparez-vous !`
+        );
+      };
+
+      const handleStartTurn = () => {
+        setGameState('playing');
+        setMessage(`Joueur ${currentPlayer}, à votre tour !`);
+      };
+
+      const themes = [
+        'Prem', 'BdD', 'Arbres', 'Graphes', 'Reseau', 'POO', 
+        'Listes', 'Processus', 'Routage', 'Recursivite', 
+        'Prog dynamique', 'Boyer-Moore', 'Bugs', 'Modularite', 
+        'Calculabilite', 'Autres'
+      ];
+
+      const toggleTheme = (theme) => {
+        setSelectedThemes(prev => 
+          prev.includes(theme) 
+            ? prev.filter(t => t !== theme)
+            : [...prev, theme]
+        );
+      };
+
+      const renderGrid = (grid, shots, isClickable, onClick, showShips) => {
+        return (
+          <div className="inline-block bg-blue-900 p-2 rounded-lg">
+            {Array(GRID_SIZE).fill(0).map((_, row) => (
+              <div key={row} className="flex">
+                {Array(GRID_SIZE).fill(0).map((_, col) => {
+                  const shot = shots.find(s => s.row === row && s.col === col);
+                  const hasShip = grid[row][col] !== null;
+                  const shipData = grid[row][col];
+                  
+                  let bgColor = 'bg-blue-400';
+                  let displayContent = '';
+                  
+                  if (shot) {
+                    if (shot.hit) {
+                      bgColor = 'bg-red-500';
+                      displayContent = '💥';
+                    } else {
+                      bgColor = 'bg-gray-400';
+                      displayContent = '•';
+                    }
+                  } else if (showShips && hasShip && shipData) {
+                    bgColor = shipData.color;
+                  }
+                  
+                  return (
+                    <button
+                      key={col}
+                      onClick={() => isClickable && onClick(row, col)}
+                      className={`w-8 h-8 m-0.5 ${bgColor} border border-blue-600 rounded transition-colors ${
+                        isClickable ? 'hover:bg-blue-300 cursor-pointer active:bg-blue-200' : ''
+                      }`}
+                      disabled={!isClickable}
+                    >
+                      {displayContent}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        );
+      };
+
+      if (gameState === 'menu') {
+        return (
+          <div className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-700 p-6 flex items-center justify-center">
+            <div className="max-w-md w-full bg-white rounded-lg shadow-2xl p-8">
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 mx-auto text-blue-600 mb-4 flex items-center justify-center">
+                  <svg className="w-20 h-20" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 21c-1.39 0-2.78-.47-4-1.32-2.44 1.71-5.56 1.71-8 0C6.78 20.53 5.39 21 4 21H2v2h2c1.38 0 2.74-.35 4-.99 2.52 1.29 5.48 1.29 8 0 1.26.65 2.62.99 4 .99h2v-2h-2zM3.95 19H4c1.6 0 3.02-.88 4-2 .98 1.12 2.4 2 4 2s3.02-.88 4-2c.98 1.12 2.4 2 4 2h.05l1.89-6.68c.08-.26.06-.54-.06-.78s-.34-.42-.6-.5L20 10.62V6c0-1.1-.9-2-2-2h-3V1H9v3H6c-1.1 0-2 .9-2 2v4.62l-1.29-1.42c-.26-.08-.48-.26-.6-.5s-.15-.52-.06-.78L3.95 19zM6 6h12v3.97L12 8 6 9.97V6z"/>
+                  </svg>
+                </div>
+                <h1 className="text-3xl font-bold text-gray-800">Bataille Navale</h1>
+                <p className="text-gray-600 mt-2">PWA - 2 joueurs</p>
+              </div>
+              
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                  <SaveIcon />
+                  Parties sauvegardées
+                </h2>
+                {savedGames.length > 0 ? (
+                  <div className="space-y-2">
+                    {savedGames.map(name => (
+                      <div key={name} className="flex gap-2">
+                        <button
+                          onClick={() => loadGame(name)}
+                          className="flex-1 p-3 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                        >
+                          {name}
+                        </button>
+                        <button
+                          onClick={() => deleteGame(name)}
+                          className="px-3 py-3 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-600">Aucune partie sauvegardée</p>
+                )}
+              </div>
+              
+              <div>
+                <h2 className="text-xl font-semibold mb-3">Nouvelle partie</h2>
+                <input
+                  type="text"
+                  placeholder="Nom de la partie"
+                  className="w-full p-3 border rounded mb-3"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      createNewGame(e.target.value);
+                      e.target.value = '';
+                    }
+                  }}
+                />
+                <button
+                  onClick={(e) => {
+                    const input = e.target.previousSibling;
+                    createNewGame(input.value);
+                    input.value = '';
+                  }}
+                  className="w-full p-3 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                >
+                  Démarrer une partie
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-700 p-4">
+          {showHelp && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Thèmes</h2>
+                <div className="space-y-2 mb-6">
+                  {themes.map(theme => (
+                    <label key={theme} className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedThemes.includes(theme)}
+                        onChange={() => toggleTheme(theme)}
+                        className="w-5 h-5 mr-3 cursor-pointer"
+                      />
+                      <span className="text-lg text-gray-700">{theme}</span>
+                    </label>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setShowHelp(false)}
+                  className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-lg font-semibold"
+                >
+                  Fermer
+                </button>
+              </div>
+            </div>
+          )}
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-white rounded-lg shadow-xl p-6 mb-4">
+              <div className="flex justify-between items-center mb-4">
+                <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+                  <div className="w-8 h-8"><ShipIcon /></div>
+                  {gameName}
+                </h1>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowHelp(true)}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    Thèmes
+                  </button>
+                  <button
+                    onClick={() => setGameState('menu')}
+                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                  >
+                    Menu
+                  </button>
+                </div>
+              </div>
+              
+              <div className="text-center mb-4">
+                <p className="text-xl font-semibold">
+                  {gameState === 'setup' ? 'Joueur 1 - Placement' : 
+                   gameState === 'setup2' ? 'Joueur 2 - Placement' :
+                   gameState === 'transition' ? 'Transition' :
+                   gameState === 'turn-start' ? `Joueur ${currentPlayer}` :
+                   gameState === 'shot-result' ? `Résultat du tir` :
+                   `Joueur ${currentPlayer}`}
+                </p>
+                <p className="text-lg text-blue-600">{message}</p>
+              </div>
+
+              {(gameState === 'setup' || gameState === 'setup2') && (
+                <div className="text-center mb-4">
+                  <p className="mb-2">Navire actuel: {SHIPS[currentShipIndex].name} ({SHIPS[currentShipIndex].size} cases)</p>
+                  <button
+                    onClick={() => setIsHorizontal(!isHorizontal)}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-2 mx-auto"
+                  >
+                    <RotateIcon />
+                    {isHorizontal ? 'Horizontal' : 'Vertical'}
+                  </button>
+                </div>
+              )}
+
+              {gameState === 'transition' && (
+                <div className="text-center mb-4 p-6 bg-blue-100 rounded">
+                  <p className="text-xl mb-4">Passez l'appareil au Joueur 2</p>
+                  <button
+                    onClick={() => {
+                      setGameState('setup2');
+                      setMessage('Joueur 2, placez vos navires');
+                    }}
+                    className="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 text-lg"
+                  >
+                    Joueur 2 prêt
+                  </button>
+                </div>
+              )}
+
+              {gameState === 'turn-start' && (
+                <div className="text-center mb-4 p-8 bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg">
+                  <p className="text-2xl font-bold mb-4">Joueur {currentPlayer}</p>
+                  
+                  {currentQuestion ? (
+                    <div className="mb-6 bg-white p-6 rounded-lg shadow-md">
+                      <div className="mb-3">
+                        <span className="inline-block px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-semibold">
+                          {currentQuestion.theme}
+                        </span>
+                      </div>
+                      <p className="text-lg font-semibold mb-4">{currentQuestion.question}</p>
+                      
+                      {currentQuestion.image && currentQuestion.image.trim() !== '' && (
+                        <img 
+                          src={currentQuestion.image} 
+                          alt="Question" 
+                          className="max-w-full max-h-64 mx-auto mb-4 rounded"
+                          onError={(e) => e.target.style.display = 'none'}
+                        />
+                      )}
+                      
+                      {showAnswer && (
+                        <div className="mt-4 p-4 bg-green-100 rounded">
+                          <p className="font-semibold text-green-800">Réponse : {currentQuestion.answer}</p>
+                        </div>
+                      )}
+                      
+                      <button
+                        onClick={() => setShowAnswer(!showAnswer)}
+                        className="mt-3 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                      >
+                        {showAnswer ? 'Masquer la réponse' : 'Afficher la réponse'}
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="text-lg mb-6">C'est votre tour de jouer !</p>
+                  )}
+                  
+                  <button
+                    onClick={handleStartTurn}
+                    className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xl font-semibold shadow-lg"
+                  >
+                    Commencer mon tour
+                  </button>
+                </div>
+              )}
+
+              {gameState === 'shot-result' && (
+                <div className="text-center mb-4 p-8 bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-lg">
+                  <p className="text-2xl font-bold mb-4">{lastShotResult}</p>
+                  <p className="text-lg mb-6">Passez l'appareil à l'autre joueur</p>
+                  <button
+                    onClick={handleEndTurn}
+                    className="px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 text-xl font-semibold shadow-lg"
+                  >
+                    Terminer mon tour
+                  </button>
+                </div>
+              )}
+
+              {gameState === 'gameover' && (
+                <div className="text-center mb-4 p-4 bg-yellow-100 rounded">
+                  <div className="w-16 h-16 mx-auto text-yellow-600 mb-2 flex items-center justify-center">
+                    <TrophyIcon />
+                  </div>
+                  <p className="text-2xl font-bold">Victoire de {winner} !</p>
+                  <button
+                    onClick={() => {
+                      setGameState('setup');
+                      initializeGame();
+                    }}
+                    className="mt-4 px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  >
+                    Nouvelle partie
+                  </button>
+                </div>
+              )}
+
+              <div className="flex flex-wrap justify-center gap-8">
+                {(gameState === 'setup' || gameState === 'transition') && (
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-center">Joueur 1 - Votre grille</h3>
+                    {renderGrid(playerGrid, [], true, handlePlayerGridClick, true)}
+                  </div>
+                )}
+                
+                {gameState === 'setup2' && (
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-center">Joueur 2 - Votre grille</h3>
+                    {renderGrid(opponentGrid, [], true, handlePlayerGridClick, true)}
+                  </div>
+                )}
+
+                {gameState === 'playing' && (
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-center">
+                      Grille adverse
+                    </h3>
+                    {renderGrid(
+                      currentPlayer === 1 ? opponentGrid : playerGrid,
+                      currentPlayer === 1 ? playerShots : opponentShots,
+                      true,
+                      handleOpponentGridClick,
+                      false
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<BatailleNavale />, document.getElementById('root'));
+  </script>
+</body>
+</html>

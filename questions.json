@@ -1,0 +1,352 @@
+[
+  {
+    "asked": false,
+    "theme": "Autres",
+    "question": "alors ?",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Processus",
+    "question": "En utilisant l'ordonnancement round-robin, au bout de combien de temps le processus d1 sera-t-il achevé ?",
+    "image": "images/quantum_ordonnancement.jpg",
+    "answer": "790"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Donner l'ojectif de cette fonction et la corriger.",
+    "image": "images/moyenne_erreur.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Recursivite",
+    "question": "Écrire une fonction qui calcule de façon récursive la moyenne d'un tableau t non vide.",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Routage",
+    "question": "Donner la particularité de ce réseau de routeur.",
+    "image": "images/table_liens.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Reseau",
+    "question": "Parmi les affirmations suivantes, quelle(s) affirmation(s) est/sont correcte(s) ?",
+    "image": "images/affirmations_chiffrement.jpg",
+    "answer": "3"
+  },
+  {
+    "asked": false,
+    "theme": "Graphes",
+    "question": "Donner une représentation du labyrinthe ci-dessous sous forme de graphe.",
+    "image": "images/labyrinthe.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Listes",
+    "question": "Quel est le rôle de chacune des opération suivantes sur une liste ?",
+    "image": "images/association_liste.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Quelle(s) instruction(s) permet(tent) de savoir si 'mangue' est présent dans le dictionnaire panier = {'banane' : 5, 'mangue' : 1, 'orange' : 3}",
+    "image": "images/verif_dico.jpg",
+    "answer": "3"
+  },
+  {
+    "asked": false,
+    "theme": "Arbres",
+    "question": "On cherche la valeur 40 dans un ABR. Lesquelles des séquences de clés suivantes sont possibles pour un parcours de recherche ?",
+    "image": "images/vrai_abr.png",
+    "answer": "1,2,3,4"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Peut-on être sûr que la boucle suivante n'est pas infinie ?",
+    "image": "images/while_non_infini.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "BdD",
+    "question": "Quelle requête SQL permet de supprimer les données d'une table t ?",
+    "image": "images/supprimer_donnees.png",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "POO",
+    "question": "Quelle est l'erreur dans le programme suivant ?",
+    "image": "images/pas_init.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Quelle est l'erreur dans ce programme ?",
+    "image": "images/non_erreur.jpg",
+    "answer": "non"
+  },
+  {
+    "asked": false,
+    "theme": "POO",
+    "question": "Un objet :",
+    "image": "images/type_objet.jpg",
+    "answer": "1,3"
+  },
+  {
+    "asked": false,
+    "theme": "POO",
+    "question": "Une classe :",
+    "image": "images/type_classe.jpg",
+    "answer": "1,3"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Quelle est la différence entre RAM et ROM ?",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Écrivez un programme effectuant un calcul de la factorielle d'un nombre de façon itérative.",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Quelle instruction utilise-t-on pour tester une pré-condition ?",
+    "image": "images/test_precondition.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "BdD",
+    "question": "Associer chaque terme du modèle relationnel à sa description.",
+    "image": "images/base_modele_relationnel.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Quelle instruction css permettra aux titres de niveau 1 d'une' page de s'afficher en rouge ?",
+    "image": "images/balise_titre.jpg",
+    "answer": "1"
+  },
+  {
+    "asked": false,
+    "theme": "Autres",
+    "question": "Combien de fois faut-il plier une feuille de papier pour que son épaisseur dépasse la distance Terre-Lune ?",
+    "image": "images/feuille_lune.jpg",
+    "answer": "42"
+  },
+  {
+    "asked": false,
+    "theme": "Reseau",
+    "question": "Que vaut le message SYMETRIQUE chiffré en code César avec un décalage de 7 ?",
+    "image": "",
+    "answer": "zftlaypxbl"
+  },
+  {
+    "asked": false,
+    "theme": "POO",
+    "question": "self est :",
+    "image": "images/type_self.jpg",
+    "answer": "c,d"
+  },
+  {
+    "asked": false,
+    "theme": "Autres",
+    "question": "Trouvez l'intru.",
+    "image": "images/paradigmes.jpg",
+    "answer": "Graduelle"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Quel est le résultat de l'expression suivante ?",
+    "image": "images/resultat_tableau_comprehension.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Reseau",
+    "question": "Quelle est la différence entre chiffrement symétrique et chiffrement asymétrique ?",
+    "image": " ",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Quelles sont les principales différences entre TCP et UDP ?",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Listes",
+    "question": "Quelle est la différence entre une liste chaînée simple et une liste chaînée double ?",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Implémentez une fonction qui retourne le maximum d'une liste sans utiliser max().",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Quel est l'entier positif codé en base 2 sur 8 bits par le code 0010 1010 ?",
+    "image": "",
+    "answer": "42"
+  },
+  {
+    "asked": false,
+    "theme": "Reseau",
+    "question": "Quelle méthode de cryptage permet de chiffrer un message selon la table suivante ?",
+    "image": "images/table_vigenere.jpg",
+    "answer": "vigenere"
+  },
+  {
+    "asked": false,
+    "theme": "Graphes",
+    "question": "Implémentez un parcours en largeur du graphe représenté par cette liste d'adjacence en partant de A ?",
+    "image": "images/graphe_largeur.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Quel est le principe de la recherche par dichotomie ?",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Routage",
+    "question": "Déterminer l'adresse du réseau d'une machine dont l'adresse est 192.172.5.4 avec un masque de sous-réseau à 255.255.0.0.",
+    "image": "",
+    "answer": "192.172.0.0"
+  },
+  {
+    "asked": false,
+    "theme": "Arbres",
+    "question": "Donner la racine, la taille, la hauteur et le nombre de feuille de cet arbre en considérant que la profondeur de la racine est de 1.",
+    "image": "mesures_arbre.png",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Écrire (sans boucle) une fonction nb_diviseur(j,n) qui renvoie le nombre d'entier entre 1 et j qui divisent n.",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Graphes",
+    "question": "Écrire une fonction non_oriente(graphe) qui détermine si un graphe orienté peut en réalité être représenté comme un graphe non-orienté. Le graphe est défini en matrice d'adjacence.",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Routage",
+    "question": "Quel est le plus court chemin entre A et B passant par G ?",
+    "image": "images/plus_court_chemin_reseau.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Recursivite",
+    "question": "Indiquer ce que renvoie f(8,20) ?",
+    "image": "images/mystere_recursive.jpg",
+    "answer": "4"
+  },
+  {
+    "asked": false,
+    "theme": "Autres",
+    "question": "Quel est le sens de la vie, du monde et de tout ce qui est ?",
+    "image": "",
+    "answer": "42"
+  },
+  {
+    "asked": false,
+    "theme": "POO",
+    "question": "Une instance de classe est :",
+    "image": "images/type_instance.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Associer chaque type d'opération à son rôle :",
+    "image": "images/association_operation.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Prem",
+    "question": "Quelle structures de données choisir pour chacune de ces tâches ?",
+    "image": "images/exemple_structures.png",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "POO",
+    "question": "Complétez ce schéma en indiquant le type de chaque méthode :",
+    "image": "images/schema_interface.png",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Listes",
+    "question": "Écrivez une fonction qui, à l'aide d'une pile, inverse les valeurs d'une file",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Graphes",
+    "question": "Un club de tennis doit sélectionner deux joueurs parmis quatre pour un tournoi nationnal. Pour réaliser la sélection le club organise des matchs : chaque joueurs rencontre les trois autres. On représente le résultat de ces matchs par le graphe orienté suivant : le sens des arcs indique quel joueur bat quel joueur. Quels joueurs seront sélectionnés pour le tounoi ?",
+    "image": "images/qualif_tenis.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Listes",
+    "question": "Quelles implémentations permettent de représenter le fonctionnement d'une pile ?",
+    "image": "images/qcm_implementation_pile.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Listes",
+    "question": "Lequel de ces mot de vocabulaire ne fait pas partie du champ lexical des files ?",
+    "image": "images/lexique_file.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Arbres",
+    "question": "Construisez un arbre binaire de recherche en implémentant les nœuds suivants dans l'ordre :",
+    "image": "images/creation_abr.jpg",
+    "answer": "oui"
+  }
+]
