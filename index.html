@@ -100,6 +100,7 @@
       const [currentQuestion, setCurrentQuestion] = useState(null);
       const [showAnswer, setShowAnswer] = useState(false);
       const [playerAnswer, setPlayerAnswer] = useState('');
+      const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
 
       useEffect(() => {
         loadSavedGames();
@@ -151,6 +152,21 @@
         setCurrentQuestion(availableQuestions[randomIndex]);
         setShowAnswer(false);
         setPlayerAnswer('');
+        setIsAnswerCorrect(null);
+      };
+
+      const validateAnswer = () => {
+        if (!currentQuestion || !playerAnswer.trim()) {
+          return;
+        }
+
+        // Normaliser les réponses pour la comparaison (minuscules, sans espaces superflus)
+        const normalizedPlayerAnswer = playerAnswer.trim().toLowerCase();
+        const normalizedCorrectAnswer = currentQuestion.answer.trim().toLowerCase();
+
+        const correct = normalizedPlayerAnswer === normalizedCorrectAnswer;
+        setIsAnswerCorrect(correct);
+        setShowAnswer(true);
       };
 
       const createNewGame = (name) => {
