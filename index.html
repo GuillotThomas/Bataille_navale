@@ -715,7 +715,16 @@
                     </button>
                   )}
                   
-                  {isAnswerCorrect === null && (
+                  {isAnswerCorrect === null && currentQuestion && (
+                    <button
+                      disabled
+                      className="px-8 py-4 bg-gray-400 text-white rounded-lg text-xl font-semibold shadow-lg cursor-not-allowed opacity-50"
+                    >
+                      Répondez à la question pour continuer
+                    </button>
+                  )}
+                  
+                  {isAnswerCorrect === null && !currentQuestion && (
                     <button
                       onClick={handleStartTurn}
                       className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xl font-semibold shadow-lg"
