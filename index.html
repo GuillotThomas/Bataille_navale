@@ -192,6 +192,11 @@
             setMessage(gameData.message);
             setCurrentShipIndex(gameData.currentShipIndex || 0);
             setLastShotResult(gameData.lastShotResult || '');
+            
+            // Si on charge une partie en cours (turn-start), générer une question
+            if (gameData.gameState === 'turn-start') {
+              setTimeout(() => pickRandomQuestion(), 100);
+            }
           }
         } catch (e) {
           setMessage('Erreur lors du chargement');
