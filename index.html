@@ -101,7 +101,6 @@
       const [showAnswer, setShowAnswer] = useState(false);
       const [playerAnswer, setPlayerAnswer] = useState('');
       const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
-      const [askedQuestionsIds, setAskedQuestionsIds] = useState([]);
 
       useEffect(() => {
         loadSavedGames();
@@ -121,27 +120,39 @@
 
       const loadQuestions = async () => {
         try {
-          // Charger toujours depuis le fichier JSON (questions de base)
-          const response = await fetch('questions.json');
-          const data = await response.json();
-          // Ajouter un ID unique à chaque question si elle n'en a pas
-          const questionsWithIds = data.map((q, index) => ({
-            ...q,
-            id: q.id || `q_${index}_${q.theme}_${q.question.substring(0, 20)}`
-          }));
-          setQuestions(questionsWithIds);
-          console.log('Questions chargées depuis questions.json');
+          // Vérifier d'abord si on a des questions en localStorage
+          const savedQuestions = localStorage.getItem('battleship_questions');
+          
+          if (savedQuestions) {
+            // Utiliser les questions sauvegardées
+            setQuestions(JSON.parse(savedQuestions));
+            console.log('Questions chargées depuis localStorage');
+          } else {
+            // Charger depuis le fichier JSON et sauvegarder
+            const response = await fetch('questions.json');
+            const data = await response.json();
+            setQuestions(data);
+            localStorage.setItem('battleship_questions', JSON.stringify(data));
+            console.log('Questions chargées depuis questions.json');
+          }
         } catch (error) {
           console.error('Erreur lors du chargement des questions:', error);
           setQuestions([]);
         }
       };
 
-      const resetQuestionsForGame = () => {
-        setAskedQuestionsIds([]);
-        if (gameName) {
-          localStorage.removeItem(`battleship_asked_${gameName}`);
+      const saveQuestionsToStorage = (updatedQuestions) => {
+        try {
+          localStorage.setItem('battleship_questions', JSON.stringify(updatedQuestions));
+          setQuestions(updatedQuestions);
+        } catch (error) {
+          console.error('Erreur lors de la sauvegarde des questions:', error);
         }
+      };
+
+      const resetQuestionsData = () => {
+        localStorage.removeItem('battleship_questions');
+        loadQuestions();
       };
 
       const pickRandomQuestion = () => {
@@ -162,30 +173,25 @@
           availableQuestions = questions;
         }
 
-        // Filtrer les questions non posées dans cette partie
-        let unaskedQuestions = availableQuestions.filter(q => !askedQuestionsIds.includes(q.id));
+        // Filtrer les questions non posées
+        let unaskedQuestions = availableQuestions.filter(q => !q.asked);
         
-        // Si toutes les questions ont été posées, réinitialiser pour cette partie
+        // Si toutes les questions ont été posées, réinitialiser
         if (unaskedQuestions.length === 0) {
-          setAskedQuestionsIds([]);
-          if (gameName) {
-            localStorage.removeItem(`battleship_asked_${gameName}`);
-          }
-          unaskedQuestions = availableQuestions;
+          const resetQuestions = questions.map(q => ({ ...q, asked: false }));
+          saveQuestionsToStorage(resetQuestions);
+          unaskedQuestions = availableQuestions.filter(q => !q.asked);
         }
 
         // Choisir une question aléatoire
         const randomIndex = Math.floor(Math.random() * unaskedQuestions.length);
         const selectedQuestion = unaskedQuestions[randomIndex];
         
-        // Marquer la question comme posée pour cette partie
-        const updatedAskedIds = [...askedQuestionsIds, selectedQuestion.id];
-        setAskedQuestionsIds(updatedAskedIds);
-        
-        // Sauvegarder les questions posées pour cette partie
-        if (gameName) {
-          localStorage.setItem(`battleship_asked_${gameName}`, JSON.stringify(updatedAskedIds));
-        }
+        // Marquer la question comme posée
+        const updatedQuestions = questions.map(q => 
+          q === selectedQuestion ? { ...q, asked: true } : q
+        );
+        saveQuestionsToStorage(updatedQuestions);
         
         setCurrentQuestion(selectedQuestion);
         setShowAnswer(false);
@@ -212,7 +218,6 @@
         setGameName(name.trim());
         setGameState('setup');
         setCurrentPlayer(1);
-        setAskedQuestionsIds([]);
         initializeGame();
       };
 
@@ -231,18 +236,6 @@
             setMessage(gameData.message);
             setCurrentShipIndex(gameData.currentShipIndex || 0);
             setLastShotResult(gameData.lastShotResult || '');
-            
-            // Charger les questions posées pour cette partie
-            if (gameData.askedQuestionsIds) {
-              setAskedQuestionsIds(gameData.askedQuestionsIds);
-            } else {
-              const askedData = localStorage.getItem(`battleship_asked_${name}`);
-              if (askedData) {
-                setAskedQuestionsIds(JSON.parse(askedData));
-              } else {
-                setAskedQuestionsIds([]);
-              }
-            }
             
             // Si on charge une partie en cours (turn-start), générer une question
             if (gameData.gameState === 'turn-start') {
@@ -266,13 +259,10 @@
           message: msg,
           currentShipIndex,
           lastShotResult: shotResult,
-          askedQuestionsIds: askedQuestionsIds,
           lastSaved: new Date().toISOString()
         };
         try {
           localStorage.setItem(`battleship_${gameName}`, JSON.stringify(gameData));
-          // Sauvegarder séparément les questions posées
-          localStorage.setItem(`battleship_asked_${gameName}`, JSON.stringify(askedQuestionsIds));
         } catch (e) {
           console.error('Erreur sauvegarde:', e);
         }
@@ -280,7 +270,6 @@
 
       const deleteGame = (name) => {
         localStorage.removeItem(`battleship_${name}`);
-        localStorage.removeItem(`battleship_asked_${name}`);
         loadSavedGames();
       };
 
@@ -455,7 +444,7 @@
       const themes = [
         'Python', 'KPPV', 'Tableaux', 'Prem', 'BdD', 'Arbres', 'Graphes', 'Reseau', 'POO', 
         'Listes', 'Systeme', 'Booleen', 'Processus', 'Web', 'Routage', 'Recursivite', 
-        'Prog dynamique', 'Binaire', 'Boyer-Moore', 'Bugs', 'Modularite', 
+        'Prog dynamique', 'Binaire', 'Reseau', 'Boyer-Moore', 'Bugs', 'Modularite', 
         'Dictionnaire', 'Algo tri', 'Calculabilite', 'Autres'
       ];
 
@@ -604,17 +593,17 @@
                 </div>
                 <div className="mb-4 p-3 bg-blue-50 rounded">
                   <p className="text-sm text-gray-700 mb-2">
-                    Questions posées dans cette partie : {askedQuestionsIds.length} / {questions.length}
+                    Questions posées : {questions.filter(q => q.asked).length} / {questions.length}
                   </p>
                   <button
                     onClick={() => {
-                      if (confirm('Réinitialiser les questions de cette partie ? Elles pourront toutes être reposées.')) {
-                        resetQuestionsForGame();
+                      if (confirm('Réinitialiser toutes les questions ? Elles pourront toutes être reposées.')) {
+                        resetQuestionsData();
                       }
                     }}
                     className="w-full px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm"
                   >
-                    Réinitialiser les questions de cette partie
+                    Réinitialiser les questions
                   </button>
                 </div>
                 <button
