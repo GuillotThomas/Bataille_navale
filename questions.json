@@ -348,5 +348,327 @@
     "question": "Construisez un arbre binaire de recherche en implémentant les nœuds suivants dans l'ordre :",
     "image": "images/creation_abr.jpg",
     "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "KPPV",
+    "question": "On a représenté sur un quadrillage les éléments de quatre classes (chaque classe est représentée par un carré, un triangle, un losange ou un disque) ainsi qu'un nouvel élément X. En appliquant l'algorithme des k plus proches voisins pour une distance de mesure de 3, à quelle classe est affecté le nouvel élément X ?",
+    "image": "images/kppv.jpg",
+    "answer": "disque"
+  },
+  {
+    "asked": false,
+    "theme": "Dictionnaire",
+    "question": "On considère le dictionnaire ci-dessous. Quelle est la valeur de D[D[D[2]]] ?",
+    "image": "images/appel_dictionnaire.jpg",
+    "answer": "4"
+  },
+  {
+    "asked": false,
+    "theme": "Tableaux",
+    "question": "Que renvoie l'appel s((1,3), (2,4)) à la fonction ci-dessous ?",
+    "image": "images/tuple.jpg",
+    "answer": "(3,7)"
+  },
+  {
+    "asked": false,
+    "theme": "Tableaux",
+    "question": "Qu'obtient-on si on tape l'instruction [1,4,3] + [2,4,5] dans la console ?",
+    "image": "",
+    "answer": "[1,4,3,2,4,5]"
+  },
+  {
+    "asked": false,
+    "theme": "Booleen",
+    "question": "Soit l'expression ci-dessous. Quelle valeur est son résultat avec a à vrai et b à faux ?",
+    "image": "images/expression_logique.jpg",
+    "answer": "faux"
+  },
+  {
+    "asked": false,
+    "theme": "Python",
+    "question": "Que renvoie l'appel rey(100) de la fonction ci-dessous ?",
+    "image": "images/boucle_infinie.jpg",
+    "answer": "rien"
+  },
+  {
+    "asked": false,
+    "theme": "Algo tri",
+    "question": "En utilisant la recherche dichotomique, en combien de tentative êtes-vous certains de trouver un nombre tiré entre 1 et 100 ?",
+    "image": "",
+    "answer": "7"
+  },
+  {
+    "asked": false,
+    "theme": "Tableaux",
+    "question": "Que vaut l'expression [k**2 for k in range(4)]",
+    "image": "",
+    "answer": "[0,1,4,9]"
+  },
+  {
+    "asked": false,
+    "theme": "Systeme",
+    "question": "Quelle commande permettrait de retirer les droits d'exécution d'un fichier nommé \"virus.exe\" pour tous les utilisateurs ?",
+    "image": "",
+    "answer": "chmod u-x virus.exe"
+  },
+  {
+    "asked": false,
+    "theme": "Web",
+    "question": "Pour écrire sa page HTML, un élève a saisi la ligne ci-dessous. Pourquoi a-t-il fait cela ?",
+    "image": "images/meta_charset.jpg",
+    "answer": "3"
+  },
+  {
+    "asked": false,
+    "theme": "Binaire",
+    "question": "Quelle est l'écriture décimale du nombre qui s'écrit 101,0111 en binaire ?",
+    "image": "",
+    "answer": "5,3125"
+  },
+  {
+    "asked": false,
+    "theme": "Web",
+    "question": "Un élève a écrit une page HTML. L'affichage de son titre est : \"La spécialité NSI\". Quelle est la cause de cet affichage farfelu ?",
+    "image": "images/encodage_caractere.jpg",
+    "answer": "3"
+  },
+  {
+    "asked": false,
+    "theme": "Binaire",
+    "question": "Quel est le nombre maximal de bits nécessaires pour écrire le produit de deux entiers positifs codés sur 16 bits ?",
+    "image": "",
+    "answer": "32"
+  },
+  {
+    "asked": false,
+    "theme": "Systeme",
+    "question": "Bob possède un fichier dont les droits sont les suivants. Quelle(s) affirmation(s) parmi les suivantes est/sont vraie(s) ?",
+    "image": "images/droits_fichier.jpg",
+    "answer": "1,3"
+  },
+  {
+    "asked": false,
+    "theme": "Web",
+    "question": "Quelle balise ne permet pas d'insérer un composant graphique sur une page Web ?",
+    "image": "images/input_type.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "Tableaux",
+    "question": "Que renvoie l'appel recherche([1, 8, 7, 9, 8], 8) ?",
+    "image": "images/recherche_tableau.jpg",
+    "answer": "3"
+  },
+  {
+    "asked": false,
+    "theme": "Algo tri",
+    "question": "Quelle particularité doit présenter une liste pour pouvoir être parcourue par un algorithme de recherche par dichotomie ?",
+    "image": "images/recherche_dichotomie.jpg",
+    "answer": "4"
+  },
+  {
+    "asked": false,
+    "theme": "Python",
+    "question": "Un algorithme de calcul de la moyenne d'une liste L d'entiers devrait mettre en œuvre :",
+    "image": "images/boucle_moyenne.jpg",
+    "answer": "1"
+  },
+  {
+    "asked": false,
+    "theme": "Web",
+    "question": "Donner un avantage du codage UTF-8 par rapport au codage ASCII.",
+    "image": "images/codage_utf.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "Python",
+    "question": "Quelle précondition pourriez-vous ajouter à la fonction suivante ?",
+    "image": "images/assert.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "Systeme",
+    "question": "Quel est l'effet de la commande Linux suivante sur le fichier TP3 ?",
+    "image": "images/copie_linux.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "Tableaux",
+    "question": "Quelle instruction permet de créer le tableau [[0,1],[3,4],[6,7]] ?",
+    "image": "images/multi_comprehension.jpg",
+    "answer": "3"
+  },
+  {
+    "asked": false,
+    "theme": "Algo tri",
+    "question": "On souhaite remplir un sac de 20 kg avec des objets de masses 8, 4, 2 et 1. En utilisant un algorithme glouton, quels objets vont être choisis ?",
+    "image": "images/sac_a_dos.jpg",
+    "answer": "4"
+  },
+  {
+    "asked": false,
+    "theme": "Systeme",
+    "question": "Quelle commande permet de créer un répertoire nommé NSI dans le répertoire courant ?",
+    "image": "images/repertoire.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "Autres",
+    "question": "Parmi les URL suivantes, laquelle pourrait être utilisée pour une tentative d'hamesonage (phishing) ?",
+    "image": "images/phishing.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "Algo tri",
+    "question": "Quel tri entre le tri par insertion et le tri par sélection triera le plus rapidement le tableau suivant ?",
+    "image": "images/tri_efficace.jpg",
+    "answer": "insertion"
+  },
+  {
+    "asked": false,
+    "theme": "Tableaux",
+    "question": "Écrire une fonction qui sépare les éléments d'une liste en deux listes selon lesquelles sont inférieurs ou supérieurs à une valeur v.",
+    "image": "",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Dictionnaire",
+    "question": "Quelle(s) instruction(s) permet(tent) de savoir si 'mangue' est présent dans le dictionnaire panier = {'banane' : 5, 'mangue' : 1, 'orange' : 3}",
+    "image": "images/verif_dico.jpg",
+    "answer": "3"
+  },
+  {
+    "asked": false,
+    "theme": "Booleen",
+    "question": "Pour quelles valeurs de a, b et c l'expression (not c and (a or b)) est à True ?",
+    "image": "images/valeurs_booleennes.jpg",
+    "answer": "3"
+  },
+  {
+    "asked": false,
+    "theme": "Binaire",
+    "question": "Quelle code hexadécimal correspond à la couleur turquoise (64,224,208) ?",
+    "image": "images/couleur_hexa.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "Python",
+    "question": "Que ce passe-t-il lorsqu'on exécute le programme suivant ?",
+    "image": "images/non_erreur.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Python",
+    "question": "Quelle est la condition pour éviter une boucle infinie dans une boucle while ?",
+    "image": "images/condition_while.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "Python",
+    "question": "Que fait cette fonction ?",
+    "image": "images/inverse_mystere.jpg",
+    "answer": "oui"
+  },
+  {
+    "asked": false,
+    "theme": "Binaire",
+    "question": "Donnez la conversion de 93 en binaire",
+    "image": "",
+    "answer": "101 1101"
+  },
+  {
+    "asked": false,
+    "theme": "Algo tri",
+    "question": "Que fait ce programme python ?",
+    "image": "images/tri_insertion_mystere.jpg",
+    "answer": "tri par insertion"
+  },
+  {
+    "asked": false,
+    "theme": "Systeme",
+    "question": "Quel est l'effet de la commande bash suivante : >>> cd ~",
+    "image": "images/commande_cd.jpg",
+    "answer": "non"
+  },
+  {
+    "asked": false,
+    "theme": "Binaire",
+    "question": "En hexadécimal, quelle est la valeur de l'opération CBD - BAC",
+    "image": "images/operation_hex.jpg",
+    "answer": "4"
+  },
+  {
+    "asked": false,
+    "theme": "Autres",
+    "question": "Le programme python suivant ne calcule pas toujours correctement le résultat de x**y. Parmi les cas suivants, lequel permet de détecter l'erreur ?",
+    "image": "images/erreur_puissance.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "Reseau",
+    "question": "Quelle est l'utilité de la commande ping dans un réseau informatique ?",
+    "image": "images/commande_ping.jpg",
+    "answer": "1"
+  },
+  {
+    "asked": false,
+    "theme": "Web",
+    "question": "Parmi les balises HTML ci-dessous, quelle est celle qui permet à l'utilisateur de saisir son nom dans un formulaire en respectant la norme HTML ?",
+    "image": "images/champ_texte_html.jpg",
+    "answer": "1"
+  },
+  {
+    "asked": false,
+    "theme": "Booleen",
+    "question": "Si A et B sont des variables booléennes, quelle est l'expression booléennes équivalente à (not A) or B ?",
+    "image": "images/expression_booleenne.jpg",
+    "answer": "2"
+  },
+  {
+    "asked": false,
+    "theme": "Tableaux",
+    "question": "Avec la définition de la fonction f suivante, quelles est la valeur retournée par l'appel f(42,21) ?",
+    "image": "images/f_inverse_couple.jpg",
+    "answer": "21,42"
+  },
+  {
+    "asked": false,
+    "theme": "Algo tri",
+    "question": "Laquelle des propositions suivantes est triée en ordre croissant ?",
+    "image": "images/tableau_caractere_trie.jpg",
+    "answer": "1"
+  },
+  {
+    "asked": false,
+    "theme": "Binaire",
+    "question": "Quel est l'entier relatif codé en complément à 2 sur un octet par le code 1111 1111 ?",
+    "image": "",
+    "answer": "-1"
+  },
+  {
+    "asked": false,
+    "theme": "Python",
+    "question": "Que peut-on dire du programme Python suivant de calcul de nombre flottants ?",
+    "image": "images/resultat_boucle_flottant.jpg",
+    "answer": "1"
+  },
+  {
+    "asked": false,
+    "theme": "Python",
+    "question": "Quelle est la valeur affichée à l'exécution du programme suivant ?",
+    "image": "images/puissances2.jpg",
+    "answer": "1024"
   }
 ]
