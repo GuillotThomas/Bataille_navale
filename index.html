@@ -111,38 +111,29 @@
         const games = [];
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
-          // Ignorer les clés de questions et ne garder que les parties
-          if (key.startsWith('battleship_') && !key.includes('game_questions_')) {
+          if (key.startsWith('battleship_')) {
             games.push(key.replace('battleship_', ''));
           }
         }
         setSavedGames(games);
       };
 
-      const loadQuestions = async (specificGameName = null) => {
+      const loadQuestions = async () => {
         try {
-          const gameKey = specificGameName || gameName;
-    
-          if (gameKey) {
-            // Charger les questions spécifiques à cette partie
-            const savedQuestions = localStorage.getItem(`game_questions_${gameKey}`);
-      
-            if (savedQuestions) {
-              setQuestions(JSON.parse(savedQuestions));
-              console.log(`Questions chargées pour la partie: ${gameKey}`);
-              return;
-            }
-          }
-      
-          // Si pas de questions sauvegardées pour cette partie, charger depuis le fichier
-          const response = await fetch('questions.json');
-          const data = await response.json();
-          setQuestions(data);
-      
-          // Sauvegarder pour cette partie spécifique si on a un nom de partie
-          if (gameKey) {
-            localStorage.setItem(`game_questions_${gameKey}`, JSON.stringify(data));
-            console.log(`Questions initialisées pour la partie: ${gameKey}`);
+          // Vérifier d'abord si on a des questions en localStorage
+          const savedQuestions = localStorage.getItem('game_questions');
+          
+          if (savedQuestions) {
+            // Utiliser les questions sauvegardées
+            setQuestions(JSON.parse(savedQuestions));
+            console.log('Questions chargées depuis localStorage');
+          } else {
+            // Charger depuis le fichier JSON et sauvegarder
+            const response = await fetch('questions.json');
+            const data = await response.json();
+            setQuestions(data);
+            localStorage.setItem('game_questions', JSON.stringify(data));
+            console.log('Questions chargées depuis questions.json');
           }
         } catch (error) {
           console.error('Erreur lors du chargement des questions:', error);
@@ -151,10 +142,8 @@
       };
 
       const saveQuestionsToStorage = (updatedQuestions) => {
-        if (!gameName) return;
-  
         try {
-          localStorage.setItem(`game_questions_${gameName}`, JSON.stringify(updatedQuestions));
+          localStorage.setItem('game_questions', JSON.stringify(updatedQuestions));
           setQuestions(updatedQuestions);
         } catch (error) {
           console.error('Erreur lors de la sauvegarde des questions:', error);
@@ -162,10 +151,8 @@
       };
 
       const resetQuestionsData = () => {
-        if (!gameName) return;
-  
-        localStorage.removeItem(`game_questions_${gameName}`);
-        loadQuestions(gameName);
+        localStorage.removeItem('game_questions');
+        loadQuestions();
       };
 
       const pickRandomQuestion = () => {
@@ -232,9 +219,6 @@
         setGameState('setup');
         setCurrentPlayer(1);
         initializeGame();
-  
-        // Charger/initialiser les questions pour cette nouvelle partie
-        loadQuestions(name.trim());
       };
 
       const loadGame = (name) => {
@@ -252,16 +236,12 @@
             setMessage(gameData.message);
             setCurrentShipIndex(gameData.currentShipIndex || 0);
             setLastShotResult(gameData.lastShotResult || '');
-            
-            // Charger les thèmes sélectionnés
+
             if (gameData.selectedThemes) {
               setSelectedThemes(gameData.selectedThemes);
             } else {
               setSelectedThemes([]);
             }
-            
-            // Charger les questions spécifiques à cette partie
-            loadQuestions(name);
             
             // Si on charge une partie en cours (turn-start), générer une question
             if (gameData.gameState === 'turn-start') {
@@ -297,7 +277,6 @@
 
       const deleteGame = (name) => {
         localStorage.removeItem(`battleship_${name}`);
-        localStorage.removeItem(`battleship_questions_${name}`); // AJOUT ICI
         loadSavedGames();
       };
 
