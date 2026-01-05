@@ -236,6 +236,12 @@
             setMessage(gameData.message);
             setCurrentShipIndex(gameData.currentShipIndex || 0);
             setLastShotResult(gameData.lastShotResult || '');
+
+            if (gameData.selectedThemes) {
+              setSelectedThemes(gameData.selectedThemes);
+            } else {
+              setSelectedThemes([]);
+            }
             
             // Si on charge une partie en cours (turn-start), générer une question
             if (gameData.gameState === 'turn-start') {
@@ -259,6 +265,7 @@
           message: msg,
           currentShipIndex,
           lastShotResult: shotResult,
+          selectedThemes: selectedThemes,
           lastSaved: new Date().toISOString()
         };
         try {
