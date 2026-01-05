@@ -233,11 +233,15 @@
             setLastShotResult(gameData.lastShotResult || '');
             
             // Charger les questions posées pour cette partie
-            const askedData = localStorage.getItem(`battleship_asked_${name}`);
-            if (askedData) {
-              setAskedQuestionsIds(JSON.parse(askedData));
+            if (gameData.askedQuestionsIds) {
+              setAskedQuestionsIds(gameData.askedQuestionsIds);
             } else {
-              setAskedQuestionsIds([]);
+              const askedData = localStorage.getItem(`battleship_asked_${name}`);
+              if (askedData) {
+                setAskedQuestionsIds(JSON.parse(askedData));
+              } else {
+                setAskedQuestionsIds([]);
+              }
             }
             
             // Si on charge une partie en cours (turn-start), générer une question
@@ -262,10 +266,13 @@
           message: msg,
           currentShipIndex,
           lastShotResult: shotResult,
+          askedQuestionsIds: askedQuestionsIds,
           lastSaved: new Date().toISOString()
         };
         try {
           localStorage.setItem(`battleship_${gameName}`, JSON.stringify(gameData));
+          // Sauvegarder séparément les questions posées
+          localStorage.setItem(`battleship_asked_${gameName}`, JSON.stringify(askedQuestionsIds));
         } catch (e) {
           console.error('Erreur sauvegarde:', e);
         }
@@ -273,6 +280,7 @@
 
       const deleteGame = (name) => {
         localStorage.removeItem(`battleship_${name}`);
+        localStorage.removeItem(`battleship_asked_${name}`);
         loadSavedGames();
       };
 
@@ -447,7 +455,7 @@
       const themes = [
         'Python', 'KPPV', 'Tableaux', 'Prem', 'BdD', 'Arbres', 'Graphes', 'Reseau', 'POO', 
         'Listes', 'Systeme', 'Booleen', 'Processus', 'Web', 'Routage', 'Recursivite', 
-        'Prog dynamique', 'Binaire', 'Reseau', 'Boyer-Moore', 'Bugs', 'Modularite', 
+        'Prog dynamique', 'Binaire', 'Boyer-Moore', 'Bugs', 'Modularite', 
         'Dictionnaire', 'Algo tri', 'Calculabilite', 'Autres'
       ];
 
