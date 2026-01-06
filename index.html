@@ -95,8 +95,11 @@
       const [winner, setWinner] = useState('');
       const [lastShotResult, setLastShotResult] = useState('');
       const [showHelp, setShowHelp] = useState(false);
+      
+      // Nouvelles variables pour la gestion des questions par partie
       const [selectedThemes, setSelectedThemes] = useState([]);
-      const [questions, setQuestions] = useState([]);
+      const [askedQuestionIds, setAskedQuestionIds] = useState([]);
+      const [allQuestions, setAllQuestions] = useState([]);
       const [currentQuestion, setCurrentQuestion] = useState(null);
       const [showAnswer, setShowAnswer] = useState(false);
       const [playerAnswer, setPlayerAnswer] = useState('');
@@ -104,7 +107,7 @@
 
       useEffect(() => {
         loadSavedGames();
-        loadQuestions();
+        loadQuestionsFromFile();
       }, []);
 
       const loadSavedGames = () => {
@@ -118,80 +121,69 @@
         setSavedGames(games);
       };
 
-      const loadQuestions = async () => {
+      // Charger les questions depuis le fichier JSON (une seule fois, sans modification)
+      const loadQuestionsFromFile = async () => {
         try {
-          // Vérifier d'abord si on a des questions en localStorage
-          const savedQuestions = localStorage.getItem('game_questions');
-          
-          if (savedQuestions) {
-            // Utiliser les questions sauvegardées
-            setQuestions(JSON.parse(savedQuestions));
-            console.log('Questions chargées depuis localStorage');
-          } else {
-            // Charger depuis le fichier JSON et sauvegarder
-            const response = await fetch('questions.json');
-            const data = await response.json();
-            setQuestions(data);
-            localStorage.setItem('game_questions', JSON.stringify(data));
-            console.log('Questions chargées depuis questions.json');
-          }
+          const response = await fetch('questions.json');
+          const data = await response.json();
+          // Nettoyer les questions : retirer l'attribut "asked" s'il existe
+          const cleanedQuestions = data.map(q => {
+            const { asked, ...rest } = q;
+            return rest;
+          });
+          setAllQuestions(cleanedQuestions);
+          console.log(`${cleanedQuestions.length} questions chargées depuis questions.json`);
         } catch (error) {
           console.error('Erreur lors du chargement des questions:', error);
-          setQuestions([]);
+          setAllQuestions([]);
         }
       };
 
-      const saveQuestionsToStorage = (updatedQuestions) => {
-        try {
-          localStorage.setItem('game_questions', JSON.stringify(updatedQuestions));
-          setQuestions(updatedQuestions);
-        } catch (error) {
-          console.error('Erreur lors de la sauvegarde des questions:', error);
-        }
-      };
-
-      const resetQuestionsData = () => {
-        localStorage.removeItem('game_questions');
-        loadQuestions();
+      // Extraire automatiquement les thèmes disponibles
+      const getAvailableThemes = () => {
+        const themesSet = new Set(allQuestions.map(q => q.theme));
+        return Array.from(themesSet).sort();
       };
 
       const pickRandomQuestion = () => {
-        if (questions.length === 0) {
+        if (allQuestions.length === 0) {
           setCurrentQuestion(null);
           return;
         }
 
-        let availableQuestions = questions;
-        
-        // Filtrer par thèmes sélectionnés si des thèmes sont cochés
+        // Filtrer par thèmes sélectionnés
+        let availableQuestions = allQuestions;
         if (selectedThemes.length > 0) {
-          availableQuestions = questions.filter(q => selectedThemes.includes(q.theme));
+          availableQuestions = allQuestions.filter(q => selectedThemes.includes(q.theme));
         }
 
-        // Si aucune question disponible avec les thèmes sélectionnés
-        if (availableQuestions.length === 0) {
-          availableQuestions = questions;
-        }
-
-        // Filtrer les questions non posées
-        let unaskedQuestions = availableQuestions.filter(q => !q.asked);
+        // Filtrer les questions non encore posées dans cette partie
+        let unaskedQuestions = availableQuestions.filter((q, index) => {
+          const questionId = `${q.theme}_${q.question}_${index}`;
+          return !askedQuestionIds.includes(questionId);
+        });
         
-        // Si toutes les questions ont été posées, réinitialiser
+        // Si toutes les questions ont été posées, réinitialiser pour cette partie
         if (unaskedQuestions.length === 0) {
-          const resetQuestions = questions.map(q => ({ ...q, asked: false }));
-          saveQuestionsToStorage(resetQuestions);
-          unaskedQuestions = availableQuestions.filter(q => !q.asked);
+          setAskedQuestionIds([]);
+          unaskedQuestions = availableQuestions;
         }
 
         // Choisir une question aléatoire
         const randomIndex = Math.floor(Math.random() * unaskedQuestions.length);
         const selectedQuestion = unaskedQuestions[randomIndex];
         
-        // Marquer la question comme posée
-        const updatedQuestions = questions.map(q => 
-          q === selectedQuestion ? { ...q, asked: true } : q
+        // Trouver l'index de la question dans le tableau complet
+        const questionIndex = allQuestions.findIndex((q, idx) => 
+          q.theme === selectedQuestion.theme && 
+          q.question === selectedQuestion.question &&
+          idx >= allQuestions.indexOf(selectedQuestion)
         );
-        saveQuestionsToStorage(updatedQuestions);
+        
+        // Marquer la question comme posée pour cette partie
+        const questionId = `${selectedQuestion.theme}_${selectedQuestion.question}_${questionIndex}`;
+        const newAskedIds = [...askedQuestionIds, questionId];
+        setAskedQuestionIds(newAskedIds);
         
         setCurrentQuestion(selectedQuestion);
         setShowAnswer(false);
@@ -204,7 +196,6 @@
           return;
         }
 
-        // Normaliser les réponses pour la comparaison (minuscules, sans espaces superflus)
         const normalizedPlayerAnswer = playerAnswer.trim().toLowerCase();
         const normalizedCorrectAnswer = currentQuestion.answer.trim().toLowerCase();
 
@@ -218,6 +209,8 @@
         setGameName(name.trim());
         setGameState('setup');
         setCurrentPlayer(1);
+        setSelectedThemes([]);
+        setAskedQuestionIds([]);
         initializeGame();
       };
 
@@ -236,14 +229,11 @@
             setMessage(gameData.message);
             setCurrentShipIndex(gameData.currentShipIndex || 0);
             setLastShotResult(gameData.lastShotResult || '');
-
-            if (gameData.selectedThemes) {
-              setSelectedThemes(gameData.selectedThemes);
-            } else {
-              setSelectedThemes([]);
-            }
             
-            // Si on charge une partie en cours (turn-start), générer une question
+            // Charger les thèmes et questions posées de cette partie
+            setSelectedThemes(gameData.selectedThemes || []);
+            setAskedQuestionIds(gameData.askedQuestionIds || []);
+            
             if (gameData.gameState === 'turn-start') {
               setTimeout(() => pickRandomQuestion(), 100);
             }
@@ -265,7 +255,8 @@
           message: msg,
           currentShipIndex,
           lastShotResult: shotResult,
-          selectedThemes: selectedThemes,
+          selectedThemes,
+          askedQuestionIds,
           lastSaved: new Date().toISOString()
         };
         try {
@@ -448,19 +439,17 @@
         setMessage(`Joueur ${currentPlayer}, à votre tour !`);
       };
 
-      const themes = [
-        'Python', 'KPPV', 'Tableaux', 'Prem', 'BdD', 'Arbres', 'Graphes', 'Reseau', 'POO', 
-        'Listes', 'Systeme', 'Booleen', 'Processus', 'Web', 'Routage', 'Recursivite', 
-        'Prog dynamique', 'Binaire', 'Reseau', 'Boyer-Moore', 'Bugs', 'Modularite', 
-        'Dictionnaire', 'Algo tri', 'Calculabilite', 'Autres'
-      ];
-
       const toggleTheme = (theme) => {
         setSelectedThemes(prev => 
           prev.includes(theme) 
             ? prev.filter(t => t !== theme)
             : [...prev, theme]
         );
+      };
+
+      const resetQuestionsForThisGame = () => {
+        setAskedQuestionIds([]);
+        setMessage('Questions réinitialisées pour cette partie !');
       };
 
       const renderGrid = (grid, shots, isClickable, onClick, showShips) => {
@@ -579,6 +568,8 @@
         );
       }
 
+      const availableThemes = getAvailableThemes();
+
       return (
         <div className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-700 p-4">
           {showHelp && (
@@ -586,7 +577,7 @@
               <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Thèmes</h2>
                 <div className="space-y-2 mb-6">
-                  {themes.map(theme => (
+                  {availableThemes.map(theme => (
                     <label key={theme} className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer">
                       <input
                         type="checkbox"
@@ -600,17 +591,17 @@
                 </div>
                 <div className="mb-4 p-3 bg-blue-50 rounded">
                   <p className="text-sm text-gray-700 mb-2">
-                    Questions posées : {questions.filter(q => q.asked).length} / {questions.length}
+                    Questions posées dans cette partie : {askedQuestionIds.length} / {allQuestions.length}
                   </p>
                   <button
                     onClick={() => {
-                      if (confirm('Réinitialiser toutes les questions ? Elles pourront toutes être reposées.')) {
-                        resetQuestionsData();
+                      if (confirm('Réinitialiser les questions de cette partie ?')) {
+                        resetQuestionsForThisGame();
                       }
                     }}
                     className="w-full px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm"
                   >
-                    Réinitialiser les questions
+                    Réinitialiser pour cette partie
                   </button>
                 </div>
                 <button
