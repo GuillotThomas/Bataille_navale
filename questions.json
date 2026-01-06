@@ -185,7 +185,7 @@
     "asked": false,
     "theme": "Reseau",
     "question": "Quelle est la différence entre chiffrement symétrique et chiffrement asymétrique ?",
-    "image": " ",
+    "image": "",
     "answer": "oui"
   },
   {
@@ -248,7 +248,7 @@
     "asked": false,
     "theme": "Arbres",
     "question": "Donner la racine, la taille, la hauteur et le nombre de feuille de cet arbre en considérant que la profondeur de la racine est de 1.",
-    "image": "mesures_arbre.png",
+    "image": "images/mesures_arbre.png",
     "answer": "oui"
   },
   {
@@ -672,3 +672,4 @@
     "answer": "1024"
   }
 ]
+
