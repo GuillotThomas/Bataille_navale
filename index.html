@@ -151,41 +151,52 @@
           return;
         }
 
-        // Filtrer par thèmes sélectionnés
+        // Filtrer par thèmes sélectionnés (si des thèmes sont cochés)
         let availableQuestions = allQuestions;
         if (selectedThemes.length > 0) {
           availableQuestions = allQuestions.filter(q => selectedThemes.includes(q.theme));
+          
+          // Si aucune question disponible avec les thèmes sélectionnés
+          if (availableQuestions.length === 0) {
+            console.warn('Aucune question trouvée pour les thèmes sélectionnés');
+            setCurrentQuestion(null);
+            return;
+          }
         }
 
+        // Créer un tableau avec les indices originaux pour tracking
+        const availableWithIndices = availableQuestions.map(q => {
+          const originalIndex = allQuestions.findIndex(
+            original => original.theme === q.theme && 
+                       original.question === q.question && 
+                       original.answer === q.answer
+          );
+          return { question: q, originalIndex };
+        });
+
         // Filtrer les questions non encore posées dans cette partie
-        let unaskedQuestions = availableQuestions.filter((q, index) => {
-          const questionId = `${q.theme}_${q.question}_${index}`;
+        let unaskedQuestions = availableWithIndices.filter(item => {
+          const questionId = `${item.question.theme}_${item.originalIndex}`;
           return !askedQuestionIds.includes(questionId);
         });
         
         // Si toutes les questions ont été posées, réinitialiser pour cette partie
         if (unaskedQuestions.length === 0) {
+          console.log('Toutes les questions ont été posées - réinitialisation');
           setAskedQuestionIds([]);
-          unaskedQuestions = availableQuestions;
+          unaskedQuestions = availableWithIndices;
         }
 
         // Choisir une question aléatoire
         const randomIndex = Math.floor(Math.random() * unaskedQuestions.length);
-        const selectedQuestion = unaskedQuestions[randomIndex];
-        
-        // Trouver l'index de la question dans le tableau complet
-        const questionIndex = allQuestions.findIndex((q, idx) => 
-          q.theme === selectedQuestion.theme && 
-          q.question === selectedQuestion.question &&
-          idx >= allQuestions.indexOf(selectedQuestion)
-        );
+        const selectedItem = unaskedQuestions[randomIndex];
         
         // Marquer la question comme posée pour cette partie
-        const questionId = `${selectedQuestion.theme}_${selectedQuestion.question}_${questionIndex}`;
+        const questionId = `${selectedItem.question.theme}_${selectedItem.originalIndex}`;
         const newAskedIds = [...askedQuestionIds, questionId];
         setAskedQuestionIds(newAskedIds);
         
-        setCurrentQuestion(selectedQuestion);
+        setCurrentQuestion(selectedItem.question);
         setShowAnswer(false);
         setPlayerAnswer('');
         setIsAnswerCorrect(null);
