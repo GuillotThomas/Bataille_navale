@@ -81,7 +81,7 @@
     "theme": "BdD",
     "question": "Quelle requête SQL permet de supprimer les données d'une table t ?",
     "image": "images/supprimer_donnees.png",
-    "answer": "oui"
+    "answer": "3"
   },
   {
     "asked": false,
@@ -672,5 +672,6 @@
     "answer": "1024"
   }
 ]
+
 
 
