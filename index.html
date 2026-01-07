@@ -472,6 +472,7 @@
             {/* En-tête avec les chiffres */}
             <div className="flex">
               <div className="w-12"></div> {/* Espace pour aligner avec les lettres */}
+              <div className="w-3"></div> {/* Compensation pour le padding gauche de la grille */}
               <div className="flex">
                 {numbers.map((num, idx) => (
                   <div key={idx} className="w-16 h-12 m-1 flex items-center justify-center text-2xl font-bold text-gray-800">
@@ -485,6 +486,7 @@
             <div className="flex">
               {/* Colonne des lettres */}
               <div className="flex flex-col">
+                <div className="h-3"></div> {/* Compensation pour le padding haut de la grille */}
                 {letters.map((letter, idx) => (
                   <div key={idx} className="w-12 h-16 m-1 flex items-center justify-center text-2xl font-bold text-gray-800">
                     {letter}
