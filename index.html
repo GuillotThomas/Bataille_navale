@@ -477,13 +477,14 @@
                   {num}
                 </div>
               ))}
+              <div className="w-12 h-12"></div> {/* Espace vide coin supérieur droit */}
             </div>
             
-            {/* Grille avec lettres sur le côté */}
+            {/* Grille avec lettres sur les côtés */}
             <div className="bg-blue-900 p-3 rounded-lg shadow-lg">
               {Array(GRID_SIZE).fill(0).map((_, row) => (
                 <div key={row} className="flex items-center">
-                  {/* Lettre de la ligne */}
+                  {/* Lettre de la ligne (gauche) */}
                   <div className="w-12 h-16 mr-2 flex items-center justify-center text-2xl font-bold text-white">
                     {letters[row]}
                   </div>
@@ -522,8 +523,24 @@
                       </button>
                     );
                   })}
+                  
+                  {/* Lettre de la ligne (droite) */}
+                  <div className="w-12 h-16 ml-2 flex items-center justify-center text-2xl font-bold text-white">
+                    {letters[row]}
+                  </div>
                 </div>
               ))}
+            </div>
+            
+            {/* Pied avec les chiffres */}
+            <div className="flex mt-1">
+              <div className="w-16 h-12"></div> {/* Espace vide coin inférieur gauche */}
+              {numbers.map((num, idx) => (
+                <div key={idx} className="w-16 h-12 m-1 flex items-center justify-center text-2xl font-bold text-white">
+                  {num}
+                </div>
+              ))}
+              <div className="w-12 h-12"></div> {/* Espace vide coin inférieur droit */}
             </div>
           </div>
         );
