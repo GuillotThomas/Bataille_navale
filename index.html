@@ -464,45 +464,67 @@
       };
 
       const renderGrid = (grid, shots, isClickable, onClick, showShips) => {
+        const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+        const numbers = ['1', '2', '3', '4', '5', '6'];
+        
         return (
-          <div className="inline-block bg-blue-900 p-3 rounded-lg shadow-lg">
-            {Array(GRID_SIZE).fill(0).map((_, row) => (
-              <div key={row} className="flex">
-                {Array(GRID_SIZE).fill(0).map((_, col) => {
-                  const shot = shots.find(s => s.row === row && s.col === col);
-                  const hasShip = grid[row][col] !== null;
-                  const shipData = grid[row][col];
+          <div className="inline-block">
+            {/* En-tête avec les chiffres */}
+            <div className="flex mb-1">
+              <div className="w-16 h-12"></div> {/* Espace vide coin supérieur gauche */}
+              {numbers.map((num, idx) => (
+                <div key={idx} className="w-16 h-12 m-1 flex items-center justify-center text-2xl font-bold text-white">
+                  {num}
+                </div>
+              ))}
+            </div>
+            
+            {/* Grille avec lettres sur le côté */}
+            <div className="bg-blue-900 p-3 rounded-lg shadow-lg">
+              {Array(GRID_SIZE).fill(0).map((_, row) => (
+                <div key={row} className="flex items-center">
+                  {/* Lettre de la ligne */}
+                  <div className="w-12 h-16 mr-2 flex items-center justify-center text-2xl font-bold text-white">
+                    {letters[row]}
+                  </div>
                   
-                  let bgColor = 'bg-blue-400';
-                  let displayContent = '';
-                  
-                  if (shot) {
-                    if (shot.hit) {
-                      bgColor = 'bg-red-500';
-                      displayContent = '💥';
-                    } else {
-                      bgColor = 'bg-gray-400';
-                      displayContent = '•';
+                  {/* Cases de la grille */}
+                  {Array(GRID_SIZE).fill(0).map((_, col) => {
+                    const shot = shots.find(s => s.row === row && s.col === col);
+                    const hasShip = grid[row][col] !== null;
+                    const shipData = grid[row][col];
+                    
+                    let bgColor = 'bg-blue-400';
+                    let displayContent = '';
+                    
+                    if (shot) {
+                      if (shot.hit) {
+                        bgColor = 'bg-red-500';
+                        displayContent = '💥';
+                      } else {
+                        bgColor = 'bg-gray-400';
+                        displayContent = '•';
+                      }
+                    } else if (showShips && hasShip && shipData) {
+                      bgColor = shipData.color;
                     }
-                  } else if (showShips && hasShip && shipData) {
-                    bgColor = shipData.color;
-                  }
-                  
-                  return (
-                    <button
-                      key={col}
-                      onClick={() => isClickable && onClick(row, col)}
-                      className={`w-16 h-16 m-1 text-4xl flex items-center justify-center ${bgColor} border-2 border-blue-600 rounded-lg transition-colors ${
-                        isClickable ? 'hover:bg-blue-300 cursor-pointer active:bg-blue-200' : ''
-                      }`}
-                      disabled={!isClickable}
-                    >
-                      {displayContent}
-                    </button>
-                  );
-                })}
-              </div>
-            ))}
+                    
+                    return (
+                      <button
+                        key={col}
+                        onClick={() => isClickable && onClick(row, col)}
+                        className={`w-16 h-16 m-1 text-4xl flex items-center justify-center ${bgColor} border-2 border-blue-600 rounded-lg transition-colors ${
+                          isClickable ? 'hover:bg-blue-300 cursor-pointer active:bg-blue-200' : ''
+                        }`}
+                        disabled={!isClickable}
+                      >
+                        {displayContent}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
           </div>
         );
       };
