@@ -769,7 +769,7 @@
                           <p className={`font-semibold ${
                             isAnswerCorrect ? 'text-green-800' : 'text-red-800'
                           }`}>
-                            {isAnswerCorrect ? '✓ Bonne réponse !' : '✗ Mauvaise réponse'}
+                            {isAnswerCorrect ? '✓ Bonne réponse !' : '✗ Réponse différente'}
                           </p>
                           <p className={`font-semibold mt-2 ${
                             isAnswerCorrect ? 'text-green-800' : 'text-red-800'
@@ -777,9 +777,20 @@
                             Réponse attendue : {currentQuestion.answer}
                           </p>
                           {!isAnswerCorrect && (
-                            <p className="mt-2 text-red-700 font-semibold">
-                              Votre tour est passé...
-                            </p>
+                            <div className="mt-3 space-y-2">
+                              <button
+                                onClick={() => {
+                                  setIsAnswerCorrect(true);
+                                  setMessage('Réponse acceptée !');
+                                }}
+                                className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 font-semibold transition-colors"
+                              >
+                                ✓ Accepter cette réponse
+                              </button>
+                              <p className="text-red-700 font-semibold text-sm">
+                                Si la réponse est incorrecte, le tour sera passé...
+                              </p>
+                            </div>
                           )}
                         </div>
                       )}
