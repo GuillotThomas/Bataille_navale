@@ -470,29 +470,32 @@
         return (
           <div className="inline-block">
             {/* En-tête avec les chiffres */}
-            <div className="flex mb-1">
-              <div className="w-12 h-12"></div> {/* Espace vide coin supérieur gauche */}
-              {numbers.map((num, idx) => (
-                <div key={idx} className="w-16 h-12 m-1 flex items-center justify-center text-2xl font-bold text-gray-800">
-                  {num}
-                </div>
-              ))}
+            <div className="flex">
+              <div className="w-12"></div> {/* Espace pour aligner avec les lettres */}
+              <div className="flex">
+                {numbers.map((num, idx) => (
+                  <div key={idx} className="w-16 h-12 m-1 flex items-center justify-center text-2xl font-bold text-gray-800">
+                    {num}
+                  </div>
+                ))}
+              </div>
             </div>
             
             {/* Grille avec lettres sur le côté gauche */}
             <div className="flex">
-              <div className="flex flex-col justify-around mr-2">
+              {/* Colonne des lettres */}
+              <div className="flex flex-col">
                 {letters.map((letter, idx) => (
-                  <div key={idx} className="w-12 h-16 flex items-center justify-center text-2xl font-bold text-gray-800">
+                  <div key={idx} className="w-12 h-16 m-1 flex items-center justify-center text-2xl font-bold text-gray-800">
                     {letter}
                   </div>
                 ))}
               </div>
               
+              {/* Grille de jeu */}
               <div className="bg-blue-900 p-3 rounded-lg shadow-lg">
                 {Array(GRID_SIZE).fill(0).map((_, row) => (
                   <div key={row} className="flex">
-                    {/* Cases de la grille */}
                     {Array(GRID_SIZE).fill(0).map((_, col) => {
                       const shot = shots.find(s => s.row === row && s.col === col);
                       const hasShip = grid[row][col] !== null;
@@ -529,16 +532,6 @@
                   </div>
                 ))}
               </div>
-            </div>
-            
-            {/* Pied avec les chiffres */}
-            <div className="flex mt-1">
-              <div className="w-12 h-12"></div> {/* Espace vide coin inférieur gauche */}
-              {numbers.map((num, idx) => (
-                <div key={idx} className="w-16 h-12 m-1 flex items-center justify-center text-2xl font-bold text-gray-800">
-                  {num}
-                </div>
-              ))}
             </div>
           </div>
         );
